@@ -19,6 +19,8 @@ const SearchPage = ({ artists, setArtist }) => {
   const [artistName, setArtistName] = useState('');
   const [searchTimeout, setSearchTimeout] = useState(Number.NEGATIVE_INFINITY);
   const history = useHistory();
+  const [offset, setOffset] = useState(0);
+  const [limit, setLimit] = useState(15);
 
   useEffect(() => {
     window.clearTimeout(searchTimeout);
@@ -46,6 +48,8 @@ const SearchPage = ({ artists, setArtist }) => {
     setLoader(true);
     const currentData = await searchArtists(artistName, limit);
     if (currentData) {
+      setOffset(currentData.data.artists.offset);
+      setLimit(currentData.data.artists.limit);
       setArtistResult(currentData);
       setLoader(false);
     }
@@ -74,8 +78,11 @@ const SearchPage = ({ artists, setArtist }) => {
     setLoader(true);
     const currentData = await navPage(url);
     if (currentData) {
+      setOffset(currentData.data.artists.offset);
+      setLimit(currentData.data.artists.limit);
       setArtistResult(currentData);
       setLoader(false);
+
     }
   }
 
@@ -94,7 +101,7 @@ const SearchPage = ({ artists, setArtist }) => {
     <div className='searchParent'>
       <SearchBar value={artistName} placeholder={'Search for an artist ...'} onClick={() => GetArtists(artistName)} handleChange={handleChange} />
       {handlePage()}
-      {artistResult && artistResult.data.artists.items.length > 0 ? <Navigator nextUrl={artistResult.data.artists.next} prevUrl={artistResult.data.artists.previous} apiCall={Navbar} /> : null};
+      {artistResult && artistResult.data.artists.items.length > 0 ? <Navigator nextUrl={artistResult.data.artists.next} prevUrl={artistResult.data.artists.previous} apiCall={Navbar} pageNumber={(offset / limit) + 1} /> : null};
     </div>
   );
 }

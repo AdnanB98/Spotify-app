@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const headers = () => ({
-  //Authorization: `Bearer ${sessionStorage.getItem("Token")}`,
+  Authorization: `Bearer ${sessionStorage.getItem("Token")}`,
 });
 
 export const searchArtists = (artistName, limit = 15, offset = 0) => {

@@ -13,12 +13,16 @@ const AlbumPage = (props) => {
   const [data, setData] = useState(null);
   const [loader, setLoader] = useState(false);
   const { id } = useParams();
+  const [offset, setOffset] = useState(0);
+  const [limit, setLimit] = useState(15);
 
 
   const GetAlbums = async () => {
     setLoader(true);
     const currentData = await getAlbums(id, 15);
     if (currentData) {
+      setOffset(currentData.data.offset);
+      setLimit(currentData.data.limit);
       setData(currentData);
       setLoader(false);
 
@@ -51,6 +55,8 @@ const AlbumPage = (props) => {
     setLoader(true);
     const currentData = await navPage(url);
     if (currentData) {
+      setOffset(currentData.data.offset);
+      setLimit(currentData.data.limit);
       setData(currentData);
       setLoader(false);
     }
@@ -76,7 +82,7 @@ const AlbumPage = (props) => {
 
   return (
     <>{handlePage()}
-      {data && data.data.items.length > 0 ? <Navigator nextUrl={data.data.next} prevUrl={data.data.previous} apiCall={Navbar} /> : null}
+      {data && data.data.items.length > 0 ? <Navigator nextUrl={data.data.next} prevUrl={data.data.previous} apiCall={Navbar} pageNumber={(offset / limit) + 1} /> : null}
     </>
 
   )
