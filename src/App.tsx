@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import './App.css';
-import LoginPage from './pages/LoginPage';
-import SearchPage from './pages/SearchPage';
-import AlbumPage from './pages/AlbumPage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import SearchPage from './pages/SearchPage/SearchPage';
+import AlbumPage from './pages/AlbumPage/AlbumPage';
 
 import {
   BrowserRouter as Router,

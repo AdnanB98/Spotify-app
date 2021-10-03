@@ -1,0 +1,9 @@
+.navParent {
+  background-color: var(--palette-black);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  color: white;
+  width: 100%;
+}

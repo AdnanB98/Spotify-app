@@ -1,0 +1,15 @@
+.loginParent {
+  background-color: var(--palette-black);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.header {
+  color: var(--palette-white);
+  font-size: 2em;
+  font-weight: bold;
+}
