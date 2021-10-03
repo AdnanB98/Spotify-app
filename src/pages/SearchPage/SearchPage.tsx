@@ -11,7 +11,7 @@ import { getHashParams } from '../../utility';
 import ErrorPage from '../ErrorPage/ErrorPage';
 import Loader from '../../components/loader/loader';
 import './SearchPage.css';
-import Navigator from '../../components/navigatior/navigator';
+import Navigator from '../../components/navigator/navigator';
 
 const SearchPage = ({ artists }) => {
   const { artistResult, setArtistResult } = artists;

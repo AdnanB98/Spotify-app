@@ -8,7 +8,7 @@ import {
 import Loader from '../../components/loader/loader';
 import ErrorPage from '../ErrorPage/ErrorPage';
 import './AlbumPage.css';
-import Navigator from '../../components/navigatior/navigator'
+import Navigator from '../../components/navigator/navigator'
 
 const AlbumPage = (props) => {
   const [data, setData] = useState(null);
