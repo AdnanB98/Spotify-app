@@ -6,7 +6,6 @@ import {
   useParams
 } from "react-router-dom";
 import Loader from '../../components/loader/loader';
-import ErrorPage from '../ErrorPage/ErrorPage';
 import './AlbumPage.css';
 import Navigator from '../../components/navigator/navigator'
 
@@ -14,25 +13,16 @@ const AlbumPage = (props) => {
   const [data, setData] = useState(null);
   const [loader, setLoader] = useState(false);
   const { id } = useParams();
-  const [error, setError] = useState({ error: false, message: '' });
 
 
   const GetAlbums = async () => {
-    try {
-      setLoader(true);
-      const currentData = await getAlbums(id, 15);
-      if (currentData) {
-        setData(currentData);
-        setLoader(false);
-
-      }
-
-    } catch (e) {
-      setError({ error: true, message: e.message });
+    setLoader(true);
+    const currentData = await getAlbums(id, 15);
+    if (currentData) {
+      setData(currentData);
       setLoader(false);
+
     }
-
-
   }
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -58,16 +48,10 @@ const AlbumPage = (props) => {
     if (!url) {
       return;
     }
-    try {
-      setLoader(true);
-      const currentData = await navPage(url);
-      if (currentData) {
-        setData(currentData);
-        setLoader(false);
-      }
-
-    } catch (e) {
-      setError({ error: true, message: e.message });
+    setLoader(true);
+    const currentData = await navPage(url);
+    if (currentData) {
+      setData(currentData);
       setLoader(false);
     }
   }
@@ -76,13 +60,11 @@ const AlbumPage = (props) => {
 
     if (loader) {
       return <Loader />;
-    } else if (error.error) {
-      return <ErrorPage message={error.message} />
     }
     else {
       return <div>
         <div style={{ color: 'white', padding: '10px 100px 10px 100px' }}>
-          <h1>{data && data.data.items[0].artists[0].name}</h1>
+          <h1>{props.artist}</h1>
           <h2 >Albums</h2>
         </div>
         <div className="albumResults">
@@ -94,7 +76,7 @@ const AlbumPage = (props) => {
 
   return (
     <>{handlePage()}
-      {data ? <Navigator nextUrl={data.data.next} prevUrl={data.data.previous} apiCall={Navbar} /> : null}
+      {data && data.data.items.length > 0 ? <Navigator nextUrl={data.data.next} prevUrl={data.data.previous} apiCall={Navbar} /> : null}
     </>
 
   )

@@ -13,11 +13,10 @@ import Loader from '../../components/loader/loader';
 import './SearchPage.css';
 import Navigator from '../../components/navigator/navigator';
 
-const SearchPage = ({ artists }) => {
+const SearchPage = ({ artists, setArtist }) => {
   const { artistResult, setArtistResult } = artists;
   const [loader, setLoader] = useState(false);
   const [artistName, setArtistName] = useState('');
-  const [error, setError] = useState({ error: false, message: '' });
   const [searchTimeout, setSearchTimeout] = useState(Number.NEGATIVE_INFINITY);
   const history = useHistory();
 
@@ -26,7 +25,7 @@ const SearchPage = ({ artists }) => {
     if (artistName) {
       setSearchTimeout(window.setTimeout(async () => {
         await GetArtists(artistName, 15)
-      }, 2000))
+      }, 1000))
     }
   }, [artistName]);
 
@@ -42,20 +41,14 @@ const SearchPage = ({ artists }) => {
   }, []);
 
   const GetArtists = async (artistName: string, limit = 15) => {
-    try {
-      setLoader(true);
-      const currentData = await searchArtists(artistName, limit);
-      if (currentData) {
-        setArtistResult(currentData);
-        setLoader(false);
-      }
+    window.clearTimeout(searchTimeout);
 
-    } catch (e) {
-      setError({ error: true, message: e.message });
+    setLoader(true);
+    const currentData = await searchArtists(artistName, limit);
+    if (currentData) {
+      setArtistResult(currentData);
       setLoader(false);
     }
-
-
   }
   const handleChange = (event) => {
     setArtistName(event.target.value);
@@ -63,7 +56,7 @@ const SearchPage = ({ artists }) => {
   const ShowArtistCard = () => {
     if (artistResult) {
       return artistResult.data.artists.items.map((artist) => (
-        <Link className="card" to={{
+        <Link className="card" onClick={() => setArtist(artist.name)} to={{
           pathname: `/albums/${artist.id
             }`,
           state: [{ id: artist.id }]
@@ -78,16 +71,10 @@ const SearchPage = ({ artists }) => {
     if (!url) {
       return;
     }
-    try {
-      setLoader(true);
-      const currentData = await navPage(url);
-      if (currentData) {
-        setArtistResult(currentData);
-        setLoader(false);
-      }
-
-    } catch (e) {
-      setError({ error: true, message: e.message });
+    setLoader(true);
+    const currentData = await navPage(url);
+    if (currentData) {
+      setArtistResult(currentData);
       setLoader(false);
     }
   }
@@ -95,8 +82,6 @@ const SearchPage = ({ artists }) => {
   const handlePage = () => {
     if (loader) {
       return <Loader />;
-    } else if (error.error) {
-      return <ErrorPage message={error.message} />
     }
     else {
       return <><div className="searchResults">
@@ -109,7 +94,7 @@ const SearchPage = ({ artists }) => {
     <div className='searchParent'>
       <SearchBar value={artistName} placeholder={'Search for an artist ...'} onClick={() => GetArtists(artistName)} handleChange={handleChange} />
       {handlePage()}
-      {artistResult ? <Navigator nextUrl={artistResult.data.artists.next} prevUrl={artistResult.data.artists.previous} apiCall={Navbar} /> : null};
+      {artistResult && artistResult.data.artists.items.length > 0 ? <Navigator nextUrl={artistResult.data.artists.next} prevUrl={artistResult.data.artists.previous} apiCall={Navbar} /> : null};
     </div>
   );
 }
